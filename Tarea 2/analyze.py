@@ -6,6 +6,7 @@ from rules.uncouple_method import *
 from rules.dummy_if import *
 from rules.uninitialized_attribute import *
 from rules.suspicious_variable_name import *
+from rules.never_readed_variable import *
 
 path = "input-code/"
 dir_list = os.listdir(path)
@@ -18,6 +19,7 @@ for file in dir_list:
     fileContent = open(path+file).read()
     tree = parse(fileContent)
     warnings = []
+    #print(dump(tree))
     for ruleClass in Rule.__subclasses__():    
         newRule = ruleClass()
         result = newRule.analyze(tree)
