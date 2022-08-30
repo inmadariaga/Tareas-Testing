@@ -12,7 +12,6 @@ class NeverReadedVariableVisitor(WarningNodeVisitor):
                 index = unused_variables.index(node.value.id)
                 unused_variables.pop(index)
                 self.unused_variables.pop(index)
-        NodeVisitor.generic_visit(self, node)
 
     def visit_BinOp(self, node: BinOp):
         unused_variables = [var.targets[0].id for var in self.unused_variables]
@@ -45,7 +44,8 @@ class NeverReadedVariableVisitor(WarningNodeVisitor):
         NodeVisitor.generic_visit(self, node)
         if len(self.unused_variables) != 0:
             for unused_variable in self.unused_variables:
-                self.addWarning("NeverReadedVariable", unused_variable.lineno, 'variable ' + unused_variable.targets[0].id + ' is never readed')
+                if isinstance(unused_variable, Name):
+                    self.addWarning("NeverReadedVariable", unused_variable.lineno, 'variable ' + unused_variable.targets[0].id + ' is never readed')
             self.unused_variables = []
 
 
